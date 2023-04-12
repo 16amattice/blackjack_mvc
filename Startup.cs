@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace drew_blackjack_mvc
 {
@@ -24,6 +25,12 @@ namespace drew_blackjack_mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,17 +52,35 @@ namespace drew_blackjack_mvc
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "blackjack",
-                    pattern: "Blackjack",
+                    pattern: "/Blackjack/Index",
                     defaults: new { controller = "Blackjack", action = "Index" });
                 endpoints.MapControllerRoute(
+                    name: "hit",
+                    pattern: "/Blackjack/Hit",
+                    defaults: new { controller = "Blackjack", action = "Hit" });
+                endpoints.MapControllerRoute(
+                    name: "stay",
+                    pattern: "/Blackjack/Stay",
+                    defaults: new { controller = "Blackjack", action = "Stay" });
+                endpoints.MapControllerRoute(
+                    name: "restart",
+                    pattern: "/Blackjack/Restart",
+                    defaults: new { controller = "Blackjack", action = "Restart" });
+                endpoints.MapControllerRoute(
+                    name: "getGameState",
+                    pattern: "/Blackjack/GetGameState",
+                    defaults: new { controller = "Blackjack", action = "GetGameState" });
+                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Blackjack}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
 
         }
     }

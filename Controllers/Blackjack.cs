@@ -1,9 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using drew_blackjack_mvc.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Blackjack : Controller
+namespace drew_blackjack_mvc.Controllers
 {
-    public IActionResult Index()
+    public class BlackjackController : Controller
     {
-        return View("Index");
+        public IActionResult Index()
+        {
+            var viewModel = new BlackjackViewModel();
+            HttpContext.Session.SetObject("BlackjackViewModel", viewModel);
+            StartGame(viewModel);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Hit()
+        {
+            var viewModel = HttpContext.Session.GetObject<BlackjackViewModel>("BlackjackViewModel");
+            viewModel.GivePlayerCard();
+            HttpContext.Session.SetObject("BlackjackViewModel", viewModel);
+
+            return PartialView("_BlackjackTable", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Stay()
+        {
+            var viewModel = HttpContext.Session.GetObject<BlackjackViewModel>("BlackjackViewModel");
+            viewModel.Stay();
+            HttpContext.Session.SetObject("BlackjackViewModel", viewModel);
+
+            return PartialView("_BlackjackTable", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Restart()
+        {
+            var viewModel = new BlackjackViewModel();
+            HttpContext.Session.SetObject("BlackjackViewModel", viewModel);
+            StartGame(viewModel);
+
+            return PartialView("_BlackjackTable", viewModel);
+        }
+
+        private void StartGame(BlackjackViewModel viewModel)
+        {
+            viewModel.BuildDeck();
+            viewModel.ShuffleDeck();
+            viewModel.DealInitialCards();
+        }
+        [HttpGet("GetGameState")]
+        public IActionResult GetGameState()
+        {
+            var viewModel = HttpContext.Session.GetObject<BlackjackViewModel>("BlackjackViewModel");
+            return Json(viewModel);
+        }
+
     }
 }
