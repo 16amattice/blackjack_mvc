@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace drew_blackjack_mvc
+namespace drew_blackjack_mvc.Extensions
 {
     public static class SessionExtensions
     {

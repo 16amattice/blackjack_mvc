@@ -47,19 +47,26 @@ namespace drew_blackjack_mvc.Models
             GivePlayerCard();
             GiveDealerCard();
             GivePlayerCard();
+
+            PlayerSum = CalculateHandValue(PlayerHand);
+            DealerSum = CalculateHandValue(DealerHand);
         }
+
 
         public void GivePlayerCard()
         {
+            if (Deck.Count == 0) return;
             Card card = Deck.First();
             Deck.RemoveAt(0);
             PlayerHand.Add(card);
+            Console.WriteLine($"Player received card: {card.Value}{card.Suit}");
             PlayerSum = CalculateHandValue(PlayerHand);
             CheckPlayerBust();
         }
 
         public void GiveDealerCard(bool isHidden = false)
         {
+            if (Deck.Count == 0) return;
             Card card = Deck.First();
             Deck.RemoveAt(0);
 
@@ -69,6 +76,7 @@ namespace drew_blackjack_mvc.Models
             }
 
             DealerHand.Add(card);
+            Console.WriteLine($"Dealer received card: {card.Value}{card.Suit}");
             DealerSum = CalculateHandValue(DealerHand);
         }
 

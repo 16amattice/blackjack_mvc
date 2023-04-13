@@ -56,28 +56,8 @@ namespace drew_blackjack_mvc
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "blackjack",
-                    pattern: "/Blackjack/Index",
-                    defaults: new { controller = "Blackjack", action = "Index" });
-                endpoints.MapControllerRoute(
-                    name: "hit",
-                    pattern: "/Blackjack/Hit",
-                    defaults: new { controller = "Blackjack", action = "Hit" });
-                endpoints.MapControllerRoute(
-                    name: "stay",
-                    pattern: "/Blackjack/Stay",
-                    defaults: new { controller = "Blackjack", action = "Stay" });
-                endpoints.MapControllerRoute(
-                    name: "restart",
-                    pattern: "/Blackjack/Restart",
-                    defaults: new { controller = "Blackjack", action = "Restart" });
-                endpoints.MapControllerRoute(
-                    name: "getGameState",
-                    pattern: "/Blackjack/GetGameState",
-                    defaults: new { controller = "Blackjack", action = "GetGameState" });
-                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Blackjack}/{action=Index}/{id?}");
             });
 
 
