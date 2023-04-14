@@ -127,6 +127,7 @@ namespace drew_blackjack_mvc.Models
             if (PlayerSum > 21)
             {
                 GameStatus = "Bust!";
+                RevealDealerHiddenCard();
             }
         }
         private void RevealDealerHiddenCard()
