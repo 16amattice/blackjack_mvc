@@ -52,8 +52,10 @@ function sendAction(action) {
 function updateGameState(gameState) {
     updateCards("your-cards", gameState.playerHand);
     updateCards("dealer-cards", gameState.dealerHand);
+    document.getElementById("your-sum").innerText = gameState.playerSum;
     if (gameState.gameStatus) {
         document.getElementById("results").innerText = gameState.gameStatus;
+        document.getElementById("dealer-sum").innerText = gameState.dealerSum;
         document.getElementById("hit").disabled = true;
         document.getElementById("stay").disabled = true;
         document.getElementById("restart").style.visibility = "visible";
