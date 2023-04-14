@@ -1,21 +1,22 @@
 ﻿@model drew_blackjack_mvc.Models.BlackjackViewModel
-
 @{
     ViewData["Title"] = "Blackjack";
 }
-
 @{
     Layout = "~/Views/Shared/_BlackjackLayout.cshtml";
 }
-
 <link href="~/css/blackjack.css" rel="stylesheet" />
 <script src="~/js/blackjack.js"></script>
-
-<!-- Add this hidden input field -->
 <input type="hidden" id="getGameStateUrl" value="@Url.Action("GetGameState", "Blackjack")" />
+<partial name="_BlackjackTable" model="Model" />
+<div class="buttons-container">
+    <div class="button-row">
+        <button id="hit">Hit</button>
+        <button id="stay">Stay</button>
+    </div>
+    <br />
+    <div class="button-row">
+        <button id="restart">Play Again</button>
+    </div>
+</div>
 
-@Html.Partial("_BlackjackTable", Model)
-
-<button id="hit">Hit</button>
-<button id="stay">Stay</button>
-<button id="restart">Play Again</button>

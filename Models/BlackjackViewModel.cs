@@ -12,7 +12,6 @@ namespace drew_blackjack_mvc.Models
         public int DealerSum { get; set; }
         public string GameStatus { get; set; }
         public List<Card> Deck { get; set; }
-
         public BlackjackViewModel()
         {
             PlayerHand = new List<Card>();
@@ -20,12 +19,10 @@ namespace drew_blackjack_mvc.Models
             Deck = new List<Card>();
             GameStatus = "";
         }
-
         public void BuildDeck()
         {
             string[] values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
             string[] suits = { "C", "D", "H", "S" };
-
             foreach (var suit in suits)
             {
                 foreach (var value in values)
@@ -34,52 +31,42 @@ namespace drew_blackjack_mvc.Models
                 }
             }
         }
-
         public void ShuffleDeck()
         {
             var random = new Random();
             Deck = Deck.OrderBy(card => random.Next()).ToList();
         }
-
         public void DealInitialCards()
         {
             GiveDealerCard(true);
             GivePlayerCard();
             GiveDealerCard();
             GivePlayerCard();
-
             PlayerSum = CalculateHandValue(PlayerHand);
             DealerSum = CalculateHandValue(DealerHand);
+            CheckBlackjack();
         }
-
-
         public void GivePlayerCard()
         {
             if (Deck.Count == 0) return;
             Card card = Deck.First();
             Deck.RemoveAt(0);
             PlayerHand.Add(card);
-            Console.WriteLine($"Player received card: {card.Value}{card.Suit}");
             PlayerSum = CalculateHandValue(PlayerHand);
             CheckPlayerBust();
         }
-
         public void GiveDealerCard(bool isHidden = false)
         {
             if (Deck.Count == 0) return;
             Card card = Deck.First();
             Deck.RemoveAt(0);
-
             if (isHidden)
             {
                 card.IsHidden = true;
             }
-
             DealerHand.Add(card);
-            Console.WriteLine($"Dealer received card: {card.Value}{card.Suit}");
             DealerSum = CalculateHandValue(DealerHand);
         }
-
         public void Stay()
         {
             RevealDealerHiddenCard();
@@ -87,7 +74,6 @@ namespace drew_blackjack_mvc.Models
             {
                 GiveDealerCard();
             }
-
             if (PlayerSum > 21)
             {
                 GameStatus = "Bust!";
@@ -109,12 +95,10 @@ namespace drew_blackjack_mvc.Models
                 GameStatus = "You lose!";
             }
         }
-
         private int CalculateHandValue(List<Card> hand)
         {
             int sum = 0;
             int aceCount = 0;
-
             foreach (var card in hand)
             {
                 if (card.Value == "A")
@@ -131,16 +115,13 @@ namespace drew_blackjack_mvc.Models
                     sum += int.Parse(card.Value);
                 }
             }
-
             while (sum > 21 && aceCount > 0)
             {
                 sum -= 10;
                 aceCount--;
             }
-
             return sum;
         }
-
         private void CheckPlayerBust()
         {
             if (PlayerSum > 21)
@@ -148,13 +129,33 @@ namespace drew_blackjack_mvc.Models
                 GameStatus = "Bust!";
             }
         }
-
         private void RevealDealerHiddenCard()
         {
             foreach (var card in DealerHand)
             {
                 card.IsHidden = false;
             }
+        }
+        private void CheckBlackjack()
+        {
+            if (PlayerSum == 21 && (PlayerHand.Count == 2) && HasTenPointCard(PlayerHand) && HasAce(PlayerHand))
+            {
+                GameStatus = "You win with a blackjack!";
+                RevealDealerHiddenCard();
+            }
+            else if (DealerSum == 21 && (DealerHand.Count == 2) && HasTenPointCard(DealerHand) && HasAce(DealerHand))
+            {
+                GameStatus = "You lose! Dealer has a blackjack.";
+                RevealDealerHiddenCard();
+            }
+        }
+        private bool HasTenPointCard(List<Card> hand)
+        {
+            return hand.Any(card => card.Value == "10" || card.Value == "J" || card.Value == "Q" || card.Value == "K");
+        }
+        private bool HasAce(List<Card> hand)
+        {
+            return hand.Any(card => card.Value == "A");
         }
     }
 }

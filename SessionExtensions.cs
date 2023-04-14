@@ -9,7 +9,6 @@ namespace drew_blackjack_mvc.Extensions
         {
             session.SetString(key, JsonConvert.SerializeObject(value));
         }
-
         public static T GetObject<T>(this ISession session, string key)
         {
             var value = session.GetString(key);
